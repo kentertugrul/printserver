@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Float, DateTime, Text, Boolean
+from sqlalchemy import Column, String, Integer, Float, DateTime, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
@@ -62,7 +62,7 @@ class TemplateSlot(Base):
     __tablename__ = "template_slots"
 
     id = Column(String(50), primary_key=True)  # e.g., "bottle_main"
-    template_id = Column(String(50), primary_key=True)
+    template_id = Column(String(50), ForeignKey("templates.id"), primary_key=True)
     
     # Human-readable info
     name = Column(String(100), nullable=False)  # e.g., "30ml Main Bottle"
@@ -86,5 +86,5 @@ class TemplateSlot(Base):
     display_order = Column(Integer, default=0)
     
     # Relationship
-    template = relationship("Template", back_populates="slots", foreign_keys=[template_id])
+    template = relationship("Template", back_populates="slots")
 
