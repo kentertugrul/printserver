@@ -1,6 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import axios from 'axios'
 
+// API base URL - uses environment variable in production
+const API_BASE = import.meta.env.VITE_API_URL || ''
+axios.defaults.baseURL = API_BASE
+
 interface User {
   id: number
   email: string
