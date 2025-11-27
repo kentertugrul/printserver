@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import clsx from 'clsx'
 import {
@@ -10,11 +9,8 @@ import {
   Plus,
   Trash2,
   Save,
-  Move,
   Square,
   RotateCcw,
-  Eye,
-  EyeOff,
   Loader2,
   CheckCircle2,
   Grid3X3,

@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Sparkles, Eye, EyeOff } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -18,14 +16,11 @@ export default function Login() {
     setError('')
     setIsLoading(true)
 
-    try {
-      await login(email, password)
-      navigate('/')
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Login failed')
-    } finally {
+    // Auth disabled for testing - just redirect to dashboard
+    setTimeout(() => {
       setIsLoading(false)
-    }
+      navigate('/')
+    }, 500)
   }
 
   return (
