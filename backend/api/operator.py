@@ -32,10 +32,10 @@ async def get_operator_queue(
     Get the operator's view of the print queue.
     Shows jobs in QUEUED_LOCAL, AWAITING_OPERATOR, and SENT_TO_PRINTER status.
     """
-    # Verify printer exists
+    # If printer doesn't exist, return empty list (for fresh deployments)
     printer = db.query(Printer).filter(Printer.id == printer_id).first()
     if not printer:
-        raise HTTPException(status_code=404, detail="Printer not found")
+        return []
     
     jobs = db.query(Job).filter(
         Job.printer_id == printer_id,
