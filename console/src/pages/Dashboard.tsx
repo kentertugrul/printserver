@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -40,7 +40,7 @@ function StatusBadge({ status }: { status: JobStatus }) {
 }
 
 // Job card component
-function JobCard({ job, onAction }: { job: Job; onAction: (action: string) => void }) {
+function JobCard({ job }: { job: Job }) {
   const isActive = job.status === 'awaiting_operator' || job.status === 'sent_to_printer'
   
   return (
@@ -114,7 +114,7 @@ function QueueSection({
         <div className="space-y-3">
           <AnimatePresence>
             {jobs.map(job => (
-              <JobCard key={job.id} job={job} onAction={() => {}} />
+              <JobCard key={job.id} job={job} />
             ))}
           </AnimatePresence>
         </div>
@@ -124,7 +124,6 @@ function QueueSection({
 }
 
 export default function Dashboard() {
-  const queryClient = useQueryClient()
   const [selectedPrinter, setSelectedPrinter] = useState<string>('b1070uv-brooklyn')
   
   // Mock user for testing (auth disabled)

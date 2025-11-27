@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
-import clsx from 'clsx'
 import {
   ArrowLeft,
   Printer,
@@ -17,10 +16,10 @@ import {
   Play,
   RotateCcw,
 } from 'lucide-react'
-import { Job, JobSlot, JobStatus } from '../types'
+import { Job, JobSlot } from '../types'
 
 // Jig map visualization
-function JigMap({ slots, templateId }: { slots: JobSlot[]; templateId: string }) {
+function JigMap({ slots }: { slots: JobSlot[] }) {
   // Mock layout - in production this would come from the template
   const layout = {
     width: 329,
@@ -32,8 +31,6 @@ function JigMap({ slots, templateId }: { slots: JobSlot[]; templateId: string })
       { id: 'box_top', x: 50, y: 250, width: 150, height: 100, label: 'D' },
     ]
   }
-
-  const scale = 0.6
 
   return (
     <div className="relative bg-midnight-800 rounded-2xl p-4 overflow-hidden">
@@ -68,7 +65,7 @@ function JigMap({ slots, templateId }: { slots: JobSlot[]; templateId: string })
         />
         
         {/* Slot positions */}
-        {layout.slots.map((slotPos, idx) => {
+        {layout.slots.map((slotPos) => {
           const jobSlot = slots.find(s => s.template_slot_id === slotPos.id)
           const hasLabel = !!jobSlot?.label_asset_path
           
@@ -273,7 +270,6 @@ export default function JobDetail() {
   const canMarkJigLoaded = job.status === 'queued_local'
   const canPrint = job.status === 'awaiting_operator'
   const canComplete = job.status === 'sent_to_printer'
-  const canReturnToQueue = job.status === 'awaiting_operator'
 
   return (
     <div className="min-h-screen bg-midnight-950">
@@ -308,7 +304,7 @@ export default function JobDetail() {
                 <Printer className="w-5 h-5 text-scentcraft-400" />
                 Jig Layout
               </h2>
-              <JigMap slots={job.slots} templateId={job.template_id} />
+              <JigMap slots={job.slots} />
               
               <div className="mt-4 p-4 bg-scentcraft-500/10 rounded-xl border border-scentcraft-500/20">
                 <p className="text-scentcraft-300 text-sm">

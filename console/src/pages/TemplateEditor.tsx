@@ -310,7 +310,6 @@ function SlotProperties({
 
 export default function TemplateEditor() {
   const { templateId } = useParams()
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const canvasRef = useRef<HTMLDivElement>(null)
 
