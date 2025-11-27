@@ -4,6 +4,7 @@ ScentCraft Print Server - Main Application
 A distributed print job management system for UV printing.
 """
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -21,6 +22,21 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown: cleanup if needed
     print("Shutting down...")
+
+
+# Get allowed origins from environment or use defaults
+def get_cors_origins():
+    origins_env = os.getenv("CORS_ORIGINS", "")
+    if origins_env:
+        return [o.strip() for o in origins_env.split(",")]
+    return [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "https://printserver-psi.vercel.app",
+        "https://printserver-git-main-scentcraft.vercel.app",
+    ]
 
 
 app = FastAPI(
@@ -48,12 +64,7 @@ app = FastAPI(
 # CORS middleware for the operator console
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React dev server
-        "http://localhost:5173",  # Vite dev server
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
