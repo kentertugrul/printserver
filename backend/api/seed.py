@@ -29,9 +29,7 @@ async def seed_demo_data(db: Session = Depends(get_db)):
             name="Epson B1070UV - Brooklyn",
             location="Brooklyn Studio",
             api_key=secrets.token_urlsafe(32),
-            model="Epson SureColor B1070UV",
-            status="online",
-            is_active=True,
+            is_online=True,
         )
         db.add(printer)
         created["printers"] += 1
