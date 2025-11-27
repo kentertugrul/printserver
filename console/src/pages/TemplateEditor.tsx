@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
+import api from '../lib/api'
 import clsx from 'clsx'
 import {
   ArrowLeft,
@@ -323,7 +323,7 @@ export default function TemplateEditor() {
   const { data: templateData, isLoading } = useQuery({
     queryKey: ['template-visual', templateId],
     queryFn: async () => {
-      const response = await axios.get(`/api/templates/${templateId}/slots/visual`)
+      const response = await api.get(`/api/templates/${templateId}/slots/visual`)
       return response.data as TemplateData
     },
     enabled: !!templateId,
@@ -348,7 +348,7 @@ export default function TemplateEditor() {
     mutationFn: async () => {
       const formData = new FormData()
       formData.append('slots_json', JSON.stringify(slots))
-      await axios.post(`/api/templates/${templateId}/slots/visual`, formData)
+      await api.post(`/api/templates/${templateId}/slots/visual`, formData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['template-visual', templateId] })
@@ -360,7 +360,7 @@ export default function TemplateEditor() {
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.append('file', file)
-      await axios.post(`/api/templates/${templateId}/upload-pdf`, formData)
+      await api.post(`/api/templates/${templateId}/upload-pdf`, formData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['template-visual', templateId] })

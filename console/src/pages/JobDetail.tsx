@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
-import axios from 'axios'
+import api from '../lib/api'
 import {
   ArrowLeft,
   Printer,
@@ -195,14 +195,14 @@ export default function JobDetail() {
   const { data: job, isLoading, error } = useQuery({
     queryKey: ['job', jobId],
     queryFn: async () => {
-      const response = await axios.get(`/api/jobs/${jobId}`)
+      const response = await api.get(`/api/jobs/${jobId}`)
       return response.data as Job
     },
   })
 
   // Mutations
   const jigLoadedMutation = useMutation({
-    mutationFn: () => axios.post(`/api/operator/jobs/${jobId}/jig-loaded`),
+    mutationFn: () => api.post(`/api/operator/jobs/${jobId}/jig-loaded`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['queue'] })
@@ -210,7 +210,7 @@ export default function JobDetail() {
   })
 
   const printMutation = useMutation({
-    mutationFn: () => axios.post(`/api/operator/jobs/${jobId}/print`),
+    mutationFn: () => api.post(`/api/operator/jobs/${jobId}/print`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['queue'] })
@@ -218,7 +218,7 @@ export default function JobDetail() {
   })
 
   const completeMutation = useMutation({
-    mutationFn: () => axios.post(`/api/operator/jobs/${jobId}/complete`),
+    mutationFn: () => api.post(`/api/operator/jobs/${jobId}/complete`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['queue'] })
@@ -227,7 +227,7 @@ export default function JobDetail() {
   })
 
   const failMutation = useMutation({
-    mutationFn: (reason: string) => axios.post(`/api/operator/jobs/${jobId}/fail?reason=${encodeURIComponent(reason)}`),
+    mutationFn: (reason: string) => api.post(`/api/operator/jobs/${jobId}/fail?reason=${encodeURIComponent(reason)}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['queue'] })
@@ -237,7 +237,7 @@ export default function JobDetail() {
   })
 
   const returnToQueueMutation = useMutation({
-    mutationFn: () => axios.post(`/api/operator/jobs/${jobId}/return-to-queue`),
+    mutationFn: () => api.post(`/api/operator/jobs/${jobId}/return-to-queue`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job', jobId] })
       queryClient.invalidateQueries({ queryKey: ['queue'] })

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../lib/api'
 import { 
   Printer, 
   Clock, 
@@ -134,7 +134,7 @@ export default function Dashboard() {
   const { data: queue, isLoading, error: queueError, refetch } = useQuery({
     queryKey: ['queue', selectedPrinter],
     queryFn: async () => {
-      const response = await axios.get(`/api/operator/queue?printer_id=${selectedPrinter}`)
+      const response = await api.get(`/api/operator/queue?printer_id=${selectedPrinter}`)
       return response.data as Job[]
     },
     retry: false,
@@ -144,7 +144,7 @@ export default function Dashboard() {
   const { data: printers } = useQuery({
     queryKey: ['printers'],
     queryFn: async () => {
-      const response = await axios.get('/api/printers/')
+      const response = await api.get('/api/printers/')
       return response.data
     },
     retry: false,

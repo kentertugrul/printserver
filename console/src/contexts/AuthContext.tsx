@@ -1,9 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import axios from 'axios'
-
-// API base URL - uses environment variable in production
-const API_BASE = import.meta.env.VITE_API_URL || ''
-axios.defaults.baseURL = API_BASE
+import api from '../lib/api'
 
 interface User {
   id: number
@@ -29,9 +25,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Set up axios defaults
+    // Set up api defaults
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
       // Verify token by fetching user
       fetchUser()
     } else {
@@ -41,13 +37,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function fetchUser() {
     try {
-      const response = await axios.get('/api/auth/me')
+      const response = await api.get('/api/auth/me')
       setUser(response.data)
     } catch (error) {
       // Token invalid, clear it
       localStorage.removeItem('token')
       setToken(null)
-      delete axios.defaults.headers.common['Authorization']
+      delete api.defaults.headers.common['Authorization']
     } finally {
       setIsLoading(false)
     }
@@ -58,20 +54,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     formData.append('username', email)
     formData.append('password', password)
 
-    const response = await axios.post('/api/auth/token', formData, {
+    const response = await api.post('/api/auth/token', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
     const { access_token, user } = response.data
     localStorage.setItem('token', access_token)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
+    api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
     setToken(access_token)
     setUser(user)
   }
 
   function logout() {
     localStorage.removeItem('token')
-    delete axios.defaults.headers.common['Authorization']
+    delete api.defaults.headers.common['Authorization']
     setToken(null)
     setUser(null)
   }
