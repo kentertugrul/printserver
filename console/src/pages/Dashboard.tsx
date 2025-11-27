@@ -131,12 +131,13 @@ export default function Dashboard() {
   const logout = () => { window.location.href = '/login' }
 
   // Fetch queue
-  const { data: queue, isLoading, refetch } = useQuery({
+  const { data: queue, isLoading, error: queueError, refetch } = useQuery({
     queryKey: ['queue', selectedPrinter],
     queryFn: async () => {
       const response = await axios.get(`/api/operator/queue?printer_id=${selectedPrinter}`)
       return response.data as Job[]
     },
+    retry: false,
   })
 
   // Fetch printers
@@ -146,7 +147,11 @@ export default function Dashboard() {
       const response = await axios.get('/api/printers/')
       return response.data
     },
+    retry: false,
   })
+
+  // Show error state if backend unavailable
+  const backendUnavailable = queueError !== null
 
   // Separate jobs by status
   const nowPrinting = queue?.filter(j => j.status === 'sent_to_printer') || []
@@ -216,7 +221,22 @@ export default function Dashboard() {
 
       {/* Main content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {isLoading ? (
+        {backendUnavailable ? (
+          <div className="card text-center py-16">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-amber-400" />
+            </div>
+            <h2 className="text-xl font-semibold text-white mb-2">Backend Not Connected</h2>
+            <p className="text-midnight-400 max-w-md mx-auto">
+              The print server API is not available. Deploy the backend to Railway or Render to enable full functionality.
+            </p>
+            <div className="mt-6 p-4 bg-midnight-800 rounded-xl text-left max-w-lg mx-auto">
+              <p className="text-sm text-midnight-300 font-mono">
+                API URL: {import.meta.env.VITE_API_URL || '/api (not configured)'}
+              </p>
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-scentcraft-500 border-t-transparent rounded-full animate-spin" />
           </div>
