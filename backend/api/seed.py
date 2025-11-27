@@ -172,6 +172,23 @@ async def seed_demo_data(db: Session = Depends(get_db)):
     }
 
 
+@router.get("/printer-api-key/{printer_id}")
+async def get_printer_api_key(printer_id: str, db: Session = Depends(get_db)):
+    """
+    Get a printer's API key for agent setup.
+    WARNING: This is for development only - remove in production!
+    """
+    printer = db.query(Printer).filter(Printer.id == printer_id).first()
+    if not printer:
+        return {"error": "Printer not found"}
+    return {
+        "printer_id": printer.id,
+        "printer_name": printer.name,
+        "api_key": printer.api_key,
+        "warning": "Keep this key secret! Use it in your Print Agent config."
+    }
+
+
 @router.delete("/clear-demo-data")
 async def clear_demo_data(db: Session = Depends(get_db)):
     """Clear all demo data from the database."""
