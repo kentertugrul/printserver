@@ -7,6 +7,7 @@ from .users import router as users_router
 from .auth import router as auth_router
 from .operator import router as operator_router
 from .agent import router as agent_router
+from .seed import router as seed_router
 
 # Main API router
 api_router = APIRouter()
@@ -20,4 +21,5 @@ api_router.include_router(template_editor_router, prefix="/templates", tags=["Te
 api_router.include_router(jobs_router, prefix="/jobs", tags=["Jobs"])
 api_router.include_router(operator_router, prefix="/operator", tags=["Operator Console"])
 api_router.include_router(agent_router, prefix="/agent", tags=["Print Agent"])
+api_router.include_router(seed_router, prefix="/dev", tags=["Development"])
 
