@@ -324,7 +324,7 @@ export default function TemplateEditor() {
   const { data: templateData, isLoading } = useQuery({
     queryKey: ['template-visual', templateId],
     queryFn: async () => {
-      const response = await api.get(`/api/templates/editor/${templateId}/slots/visual`)
+      const response = await api.get(`/api/templates/${templateId}/slots/visual`)
       return response.data as TemplateData
     },
     enabled: !!templateId,
@@ -353,7 +353,7 @@ export default function TemplateEditor() {
     mutationFn: async () => {
       const formData = new FormData()
       formData.append('slots_json', JSON.stringify(slots))
-      await api.post(`/api/templates/editor/${templateId}/slots/visual`, formData)
+      await api.post(`/api/templates/${templateId}/slots/visual`, formData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['template-visual', templateId] })
@@ -365,7 +365,7 @@ export default function TemplateEditor() {
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.append('file', file)
-      const response = await api.post(`/api/templates/editor/${templateId}/upload-jig`, formData)
+      const response = await api.post(`/api/templates/${templateId}/upload-jig`, formData)
       return response.data
     },
     onSuccess: (data) => {

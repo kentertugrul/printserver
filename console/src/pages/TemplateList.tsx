@@ -67,7 +67,7 @@ export default function TemplateList() {
         try {
           const formData = new FormData()
           formData.append('file', uploadFile)
-          await api.post(`/api/templates/editor/${createdTemplate.id}/upload-jig`, formData, {
+          await api.post(`/api/templates/${createdTemplate.id}/upload-jig`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
           })
           console.log('PDF uploaded successfully')
