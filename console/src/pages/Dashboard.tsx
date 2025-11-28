@@ -12,7 +12,8 @@ import {
   Sparkles,
   Layers,
   Play,
-  Pause
+  Pause,
+  Grid3X3
 } from 'lucide-react'
 // Auth disabled for testing
 // import { useAuth } from '../contexts/AuthContext'
@@ -195,6 +196,13 @@ export default function Dashboard() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link 
+                to="/templates"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-midnight-800 text-midnight-400 hover:text-white transition-colors"
+              >
+                <Grid3X3 className="w-4 h-4" />
+                <span className="text-sm">Templates</span>
+              </Link>
               <button 
                 onClick={() => refetch()}
                 className="p-2 rounded-lg hover:bg-midnight-800 text-midnight-400 hover:text-white transition-colors"
