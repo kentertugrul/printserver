@@ -17,8 +17,8 @@ interface Template {
   id: string
   name: string
   description?: string
-  bed_width_mm: number
-  bed_height_mm: number
+  bed_width: number
+  bed_height: number
   template_pdf_path?: string
   created_at: string
 }
@@ -27,10 +27,12 @@ export default function TemplateList() {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [uploadFile, setUploadFile] = useState<File | null>(null)
   const [newTemplate, setNewTemplate] = useState({
+    id: '',
     name: '',
     description: '',
-    bed_width_mm: 210,
-    bed_height_mm: 297
+    bed_width: 210,
+    bed_height: 297,
+    hot_folder_type: 'default'
   })
 
   const queryClient = useQueryClient()
@@ -85,13 +87,22 @@ export default function TemplateList() {
   }
 
   const resetForm = () => {
-    setNewTemplate({ name: '', description: '', bed_width_mm: 210, bed_height_mm: 297 })
+    setNewTemplate({ id: '', name: '', description: '', bed_width: 210, bed_height: 297, hot_folder_type: 'default' })
     setUploadFile(null)
+  }
+
+  // Generate ID from name
+  const generateId = (name: string) => {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    createTemplate.mutate(newTemplate)
+    const templateData = {
+      ...newTemplate,
+      id: newTemplate.id || generateId(newTemplate.name)
+    }
+    createTemplate.mutate(templateData)
   }
 
   return (
@@ -182,7 +193,7 @@ export default function TemplateList() {
                 </p>
 
                 <div className="flex items-center gap-4 text-sm text-midnight-500">
-                  <span>{template.bed_width_mm} × {template.bed_height_mm} mm</span>
+                  <span>{template.bed_width} × {template.bed_height} mm</span>
                   <span>•</span>
                   <span>{new Date(template.created_at).toLocaleDateString()}</span>
                 </div>
@@ -254,8 +265,8 @@ export default function TemplateList() {
                   </label>
                   <input
                     type="number"
-                    value={newTemplate.bed_width_mm}
-                    onChange={(e) => setNewTemplate({ ...newTemplate, bed_width_mm: parseInt(e.target.value) })}
+                    value={newTemplate.bed_width}
+                    onChange={(e) => setNewTemplate({ ...newTemplate, bed_width: parseInt(e.target.value) })}
                     className="w-full px-4 py-2 bg-midnight-800 border border-midnight-700 rounded-lg
                              text-white focus:border-scentcraft-500 outline-none"
                   />
@@ -266,8 +277,8 @@ export default function TemplateList() {
                   </label>
                   <input
                     type="number"
-                    value={newTemplate.bed_height_mm}
-                    onChange={(e) => setNewTemplate({ ...newTemplate, bed_height_mm: parseInt(e.target.value) })}
+                    value={newTemplate.bed_height}
+                    onChange={(e) => setNewTemplate({ ...newTemplate, bed_height: parseInt(e.target.value) })}
                     className="w-full px-4 py-2 bg-midnight-800 border border-midnight-700 rounded-lg
                              text-white focus:border-scentcraft-500 outline-none"
                   />
