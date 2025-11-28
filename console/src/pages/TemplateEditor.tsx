@@ -534,20 +534,12 @@ export default function TemplateEditor() {
 
                 {/* Template PDF preview */}
                 {previewUrl && (
-                  previewUrl.endsWith('.pdf') || previewUrl.includes('supabase') ? (
-                    <embed
-                      src={previewUrl}
-                      type="application/pdf"
-                      className="absolute inset-0 w-full h-full opacity-60"
-                    />
-                  ) : (
-                    <img
-                      src={previewUrl}
-                      alt="Template preview"
-                      className="absolute inset-0 w-full h-full object-contain opacity-50"
-                      onError={() => setPreviewUrl(null)}
-                    />
-                  )
+                  <iframe
+                    src={previewUrl}
+                    className="absolute inset-0 w-full h-full opacity-70 pointer-events-none"
+                    style={{ border: 'none' }}
+                    title="Jig template"
+                  />
                 )}
 
                 {/* Slots */}
