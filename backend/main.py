@@ -36,6 +36,8 @@ def get_cors_origins():
         "http://127.0.0.1:5173",
         "https://printserver-psi.vercel.app",
         "https://printserver-git-main-scentcraft.vercel.app",
+        "https://printserver-git-main-kentscentcraftcs-projects.vercel.app",
+        "https://scentcraft-printserver.vercel.app",
     ]
 
 
