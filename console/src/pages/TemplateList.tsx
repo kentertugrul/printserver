@@ -85,28 +85,7 @@ export default function TemplateList() {
     }
   })
 
-  // Upload jig PDF mutation
-  const uploadJigPdfMutation = useMutation({
-    mutationFn: async ({ templateId, file }: { templateId: string; file: File }) => {
-      const formData = new FormData()
-      formData.append('file', file)
-      const response = await api.post(`/api/templates/editor/${templateId}/upload-jig`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['templates'] })
-      setShowUploadModal(false)
-      resetForm()
-    }
-  })
-
-  const uploadJigPdf = (templateId: string) => {
-    if (uploadFile) {
-      uploadJigPdfMutation.mutate({ templateId, file: uploadFile })
-    }
-  }
+  // PDF upload happens inline in template creation onSuccess
 
   const resetForm = () => {
     setNewTemplate({ id: '', name: '', description: '', bed_width: 210, bed_height: 297, hot_folder_type: 'default' })
@@ -352,10 +331,10 @@ export default function TemplateList() {
                 </button>
                 <button
                   type="submit"
-                  disabled={createTemplate.isPending || uploadJigPdfMutation.isPending}
+                  disabled={createTemplate.isPending}
                   className="flex-1 btn-primary disabled:opacity-50"
                 >
-                  {createTemplate.isPending || uploadJigPdfMutation.isPending ? 'Creating...' : 'Create Template'}
+                  {createTemplate.isPending ? 'Creating...' : 'Create Template'}
                 </button>
               </div>
             </form>
