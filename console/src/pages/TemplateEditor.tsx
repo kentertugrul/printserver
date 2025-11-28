@@ -532,10 +532,10 @@ export default function TemplateEditor() {
                   />
                 )}
 
-                {/* Template PDF preview */}
+                {/* Template PDF preview - use Google Docs Viewer for PDFs */}
                 {previewUrl && (
                   <iframe
-                    src={previewUrl}
+                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(previewUrl)}&embedded=true`}
                     className="absolute inset-0 w-full h-full opacity-70 pointer-events-none"
                     style={{ border: 'none' }}
                     title="Jig template"
