@@ -59,6 +59,9 @@ export default function TemplateList() {
     onSuccess: async (createdTemplate) => {
       console.log('Success! Template:', createdTemplate)
       
+      // Close modal immediately
+      setShowUploadModal(false)
+      
       // If there's a file to upload, do it now
       if (uploadFile) {
         try {
@@ -74,7 +77,6 @@ export default function TemplateList() {
       }
       
       queryClient.invalidateQueries({ queryKey: ['templates'] })
-      setShowUploadModal(false)
       resetForm()
     },
     onError: (error: any) => {
