@@ -532,14 +532,19 @@ export default function TemplateEditor() {
                   />
                 )}
 
-                {/* Template PDF preview - use Google Docs Viewer for PDFs */}
+                {/* Template PDF link */}
                 {previewUrl && (
-                  <iframe
-                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(previewUrl)}&embedded=true`}
-                    className="absolute inset-0 w-full h-full opacity-70 pointer-events-none"
-                    style={{ border: 'none' }}
-                    title="Jig template"
-                  />
+                  <div className="absolute top-2 left-2 z-20">
+                    <a
+                      href={previewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-scentcraft-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium
+                               hover:bg-scentcraft-600 transition-colors flex items-center gap-2"
+                    >
+                      📄 View Jig PDF
+                    </a>
+                  </div>
                 )}
 
                 {/* Slots */}
