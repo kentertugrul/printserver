@@ -56,13 +56,26 @@ export default function TemplateList() {
       console.log('Template created:', response.data)
       return response.data
     },
-    onSuccess: (createdTemplate) => {
+    onSuccess: async (createdTemplate) => {
       console.log('Success! Template:', createdTemplate)
+      
+      // If there's a file to upload, do it now
+      if (uploadFile) {
+        try {
+          const formData = new FormData()
+          formData.append('file', uploadFile)
+          await api.post(`/api/templates/editor/${createdTemplate.id}/upload-jig`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+          console.log('PDF uploaded successfully')
+        } catch (err) {
+          console.error('PDF upload failed:', err)
+        }
+      }
+      
       queryClient.invalidateQueries({ queryKey: ['templates'] })
-      // For now, skip PDF upload - just close modal
       setShowUploadModal(false)
       resetForm()
-      alert('Template created: ' + createdTemplate.id)
     },
     onError: (error: any) => {
       console.error('Error creating template:', error)
