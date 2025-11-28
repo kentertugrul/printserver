@@ -28,6 +28,3 @@ python-dateutil==2.8.2
 aiofiles==23.2.1
 httpx==0.24.1
 
-# Supabase storage
-supabase==2.3.0
-
