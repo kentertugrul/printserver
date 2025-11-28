@@ -33,6 +33,7 @@ interface TemplateData {
   bed_width_mm: number
   bed_height_mm: number
   has_pdf: boolean
+  pdf_url?: string
   slots: SlotData[]
 }
 
@@ -323,7 +324,7 @@ export default function TemplateEditor() {
   const { data: templateData, isLoading } = useQuery({
     queryKey: ['template-visual', templateId],
     queryFn: async () => {
-      const response = await api.get(`/api/templates/${templateId}/slots/visual`)
+      const response = await api.get(`/api/templates/editor/${templateId}/slots/visual`)
       return response.data as TemplateData
     },
     enabled: !!templateId,
@@ -336,10 +337,14 @@ export default function TemplateEditor() {
     }
   }, [templateData])
 
-  // Load preview image
+  // Load preview image from Supabase URL
   useEffect(() => {
-    if (templateData?.has_pdf) {
-      setPreviewUrl(`/api/templates/${templateId}/preview?t=${Date.now()}`)
+    if (templateData?.pdf_url) {
+      // Use the Supabase URL directly
+      setPreviewUrl(templateData.pdf_url)
+    } else if (templateData?.has_pdf) {
+      // Fallback to local preview endpoint
+      setPreviewUrl(`/api/templates/editor/${templateId}/preview?t=${Date.now()}`)
     }
   }, [templateData, templateId])
 
@@ -348,7 +353,7 @@ export default function TemplateEditor() {
     mutationFn: async () => {
       const formData = new FormData()
       formData.append('slots_json', JSON.stringify(slots))
-      await api.post(`/api/templates/${templateId}/slots/visual`, formData)
+      await api.post(`/api/templates/editor/${templateId}/slots/visual`, formData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['template-visual', templateId] })
@@ -360,11 +365,15 @@ export default function TemplateEditor() {
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.append('file', file)
-      await api.post(`/api/templates/${templateId}/upload-pdf`, formData)
+      const response = await api.post(`/api/templates/editor/${templateId}/upload-jig`, formData)
+      return response.data
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['template-visual', templateId] })
-      setPreviewUrl(`/api/templates/${templateId}/preview?t=${Date.now()}`)
+      // Use the Supabase URL from the response
+      if (data?.template_pdf_path) {
+        setPreviewUrl(data.template_pdf_path)
+      }
     },
   })
 
@@ -525,12 +534,20 @@ export default function TemplateEditor() {
 
                 {/* Template PDF preview */}
                 {previewUrl && (
-                  <img
-                    src={previewUrl}
-                    alt="Template preview"
-                    className="absolute inset-0 w-full h-full object-contain opacity-50"
-                    onError={() => setPreviewUrl(null)}
-                  />
+                  previewUrl.endsWith('.pdf') || previewUrl.includes('supabase') ? (
+                    <embed
+                      src={previewUrl}
+                      type="application/pdf"
+                      className="absolute inset-0 w-full h-full opacity-60"
+                    />
+                  ) : (
+                    <img
+                      src={previewUrl}
+                      alt="Template preview"
+                      className="absolute inset-0 w-full h-full object-contain opacity-50"
+                      onError={() => setPreviewUrl(null)}
+                    />
+                  )
                 )}
 
                 {/* Slots */}
