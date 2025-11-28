@@ -486,28 +486,30 @@ export default function TemplateEditor() {
               {/* Upload area if no PDF */}
               {!templateData?.has_pdf && (
                 <div className="mb-6">
-                  <label className="block">
-                    <div className="border-2 border-dashed border-midnight-600 rounded-xl p-8 text-center
-                                  hover:border-scentcraft-500 transition-colors cursor-pointer">
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                      {isUploading ? (
-                        <Loader2 className="w-8 h-8 text-scentcraft-500 animate-spin mx-auto" />
-                      ) : (
-                        <>
-                          <Upload className="w-8 h-8 text-midnight-500 mx-auto mb-3" />
-                          <p className="text-midnight-300 font-medium">Upload Jig Template PDF</p>
-                          <p className="text-midnight-500 text-sm mt-1">
-                            Your jig layout will be used as the background for positioning slots
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  </label>
+                  <input
+                    id="jig-pdf-upload"
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <div 
+                    onClick={() => document.getElementById('jig-pdf-upload')?.click()}
+                    className="border-2 border-dashed border-midnight-600 rounded-xl p-8 text-center
+                              hover:border-scentcraft-500 transition-colors cursor-pointer"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-8 h-8 text-scentcraft-500 animate-spin mx-auto" />
+                    ) : (
+                      <>
+                        <Upload className="w-8 h-8 text-midnight-500 mx-auto mb-3" />
+                        <p className="text-midnight-300 font-medium">Click to Upload Jig Template PDF</p>
+                        <p className="text-midnight-500 text-sm mt-1">
+                          Your jig layout will be used as the background for positioning slots
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -634,25 +636,27 @@ export default function TemplateEditor() {
             {templateData?.has_pdf && (
               <div className="card">
                 <h3 className="font-semibold text-white mb-4">Template PDF</h3>
-                <label className="block">
-                  <div className="border border-midnight-700 rounded-lg p-3 text-center
-                                hover:border-scentcraft-500 transition-colors cursor-pointer">
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                    />
-                    {isUploading ? (
-                      <Loader2 className="w-5 h-5 text-scentcraft-500 animate-spin mx-auto" />
-                    ) : (
-                      <span className="text-midnight-400 text-sm flex items-center justify-center gap-2">
-                        <RotateCcw className="w-4 h-4" />
-                        Replace PDF
-                      </span>
-                    )}
-                  </div>
-                </label>
+                <input
+                  id="jig-pdf-replace"
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <div 
+                  onClick={() => document.getElementById('jig-pdf-replace')?.click()}
+                  className="border border-midnight-700 rounded-lg p-3 text-center
+                            hover:border-scentcraft-500 transition-colors cursor-pointer"
+                >
+                  {isUploading ? (
+                    <Loader2 className="w-5 h-5 text-scentcraft-500 animate-spin mx-auto" />
+                  ) : (
+                    <span className="text-midnight-400 text-sm flex items-center justify-center gap-2">
+                      <RotateCcw className="w-4 h-4" />
+                      Replace PDF
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </div>
