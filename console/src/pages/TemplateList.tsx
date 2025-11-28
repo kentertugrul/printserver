@@ -43,7 +43,9 @@ export default function TemplateList() {
     queryFn: async () => {
       const response = await api.get('/api/templates/')
       return response.data as Template[]
-    }
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 30000, // 30 seconds
   })
 
   // Create template mutation
@@ -103,10 +105,19 @@ export default function TemplateList() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
+    
+    // Prevent double submission
+    if (createTemplate.isPending) {
+      console.log('Already submitting...')
+      return
+    }
+    
     const templateData = {
       ...newTemplate,
       id: newTemplate.id || generateId(newTemplate.name)
     }
+    console.log('Submitting:', templateData)
     createTemplate.mutate(templateData)
   }
 
