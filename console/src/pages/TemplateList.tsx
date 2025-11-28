@@ -49,17 +49,22 @@ export default function TemplateList() {
   // Create template mutation
   const createTemplate = useMutation({
     mutationFn: async (data: typeof newTemplate) => {
+      console.log('Creating template:', data)
       const response = await api.post('/api/templates/', data)
+      console.log('Template created:', response.data)
       return response.data
     },
     onSuccess: (createdTemplate) => {
+      console.log('Success! Template:', createdTemplate)
       queryClient.invalidateQueries({ queryKey: ['templates'] })
-      if (uploadFile && createdTemplate.id) {
-        uploadJigPdf(createdTemplate.id)
-      } else {
-        setShowUploadModal(false)
-        resetForm()
-      }
+      // For now, skip PDF upload - just close modal
+      setShowUploadModal(false)
+      resetForm()
+      alert('Template created: ' + createdTemplate.id)
+    },
+    onError: (error: any) => {
+      console.error('Error creating template:', error)
+      alert('Error: ' + (error.response?.data?.detail || error.message))
     }
   })
 
