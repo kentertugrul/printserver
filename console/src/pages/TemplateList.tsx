@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import api from '../lib/api'
 import {
-  Sparkles,
   Plus,
   Upload,
   Grid3X3,
   ArrowLeft,
   FileText,
-  Trash2,
   Edit,
   X
 } from 'lucide-react'
@@ -23,17 +21,6 @@ interface Template {
   bed_height_mm: number
   template_pdf_path?: string
   created_at: string
-}
-
-interface TemplateSlot {
-  id: string
-  name: string
-  slot_type: string
-  x: number
-  y: number
-  width: number
-  height: number
-  rotation: number
 }
 
 export default function TemplateList() {
