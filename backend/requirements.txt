@@ -26,7 +26,7 @@ pdf2image==1.17.0  # Requires poppler-utils system package
 # Utilities
 python-dateutil==2.8.2
 aiofiles==23.2.1
-httpx==0.26.0
+httpx==0.24.1
 
 # Supabase storage
 supabase==2.3.0
